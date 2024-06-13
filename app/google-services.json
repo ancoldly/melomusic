@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1041178155690",
+    "project_id": "melomusic-6cdb6",
+    "storage_bucket": "melomusic-6cdb6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1041178155690:android:6267f4bb639b68e2d64ed3",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAozEmlEOL2aCy3dIDnKHTorPejhB6UJMQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
