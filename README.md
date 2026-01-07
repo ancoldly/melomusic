@@ -9,13 +9,9 @@ MELO Music App is a modern Android music streaming application built with **Kotl
 - Architecture: MVVM (Model – View – ViewModel)
 - Backend: Firebase (Auth, Firestore, Storage)
 
----
-
 ## 📌 Overview
 MELO Music App allows users to browse, search, and listen to music. The app supports two main roles: **User** and **Admin**.  
 Users can explore categories, play songs, manage favorites, and view the Now Playing screen. Admins can manage content (add, edit, delete categories, songs, podcasts).
-
----
 
 ## 🎯 Project Goals
 - Build a modern Android app using Jetpack Compose
@@ -24,8 +20,6 @@ Users can explore categories, play songs, manage favorites, and view the Now Pla
 - Implement basic music playback features
 - Role-based access control (User / Admin)
 - Organize the project for maintainability and extensibility
-
----
 
 ## 👥 Roles & Features
 
@@ -48,8 +42,6 @@ Users can explore categories, play songs, manage favorites, and view the Now Pla
 - Create / edit / delete podcasts
 - Manage metadata (title, artist, image, audio URL)
 
----
-
 ## 📱 Main Screens
 - Home: Featured, categories, suggestions
 - Search: Search songs, artists, podcasts
@@ -58,16 +50,12 @@ Users can explore categories, play songs, manage favorites, and view the Now Pla
 - Play (Now Playing): Playback screen
 - Profile: User info and settings
 
----
-
 ## 🧱 Architecture (MVVM)
 - Model: Data classes and repositories that interact with Firebase
 - View: Screens implemented with Jetpack Compose
 - ViewModel: Business logic, state management, and connecting Model <-> View
 
 This architecture keeps the codebase clear, testable, and maintainable.
-
----
 
 ## 📂 Suggested Project Structure
 app/
@@ -85,14 +73,10 @@ app/
 ├── navigation/        # Navigation graph
 └── MainActivity.kt
 
----
-
 ## 🛠 Prerequisites (Before Running)
 - Android Studio (latest recommended)
 - Android SDK
 - Firebase project
-
----
 
 ## ▶️ Installation & Run
 
@@ -124,8 +108,6 @@ cd melomusic
 ./gradlew assembleDebug
 ```
 
----
-
 ## 🚀 Future Improvements & Suggestions
 - User-managed playlists
 - Offline downloads
@@ -134,8 +116,6 @@ cd melomusic
 - Notification and lock-screen playback controls
 - Recommendation engine / personalized suggestions
 
----
-
 ## 🧾 Suggested Firebase (Firestore) Schema
 - Users: User profiles and role information
 - Categories: Music categories
@@ -143,14 +123,10 @@ cd melomusic
 - Podcasts: Podcast documents
 - Favorites: User favorite songs
 
----
-
 ## 🤝 Contributing
 - Fork the repository, create a feature/ or bugfix/ branch, and open a PR describing your changes.
 - Follow Kotlin and Jetpack Compose best practices.
 - Open an issue with a clear description when reporting bugs.
-
----
 
 ## Screenshots / UI mockups
 
