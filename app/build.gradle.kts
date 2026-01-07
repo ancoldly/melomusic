@@ -87,6 +87,10 @@ dependencies {
     implementation ("androidx.activity:activity-compose:1.4.0")
     implementation ("androidx.compose.material3:material3:1.0.0-alpha10")
 
+    implementation ("androidx.appcompat:appcompat:1.7.0")
+    implementation ("androidx.media:media:1.7.0")
+
+
 
 
     testImplementation(libs.junit)

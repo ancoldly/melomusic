@@ -11,6 +11,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,6 +33,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Surface
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
@@ -40,6 +42,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -67,6 +70,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -81,16 +85,19 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.example.myapplication.R
+import com.example.myapplication.data.CommentPodcast
 import com.example.myapplication.data.Music
 import com.example.myapplication.data.Playlist
 import com.example.myapplication.data.Podcast
 import com.example.myapplication.login.LoginViewModel
+import com.example.myapplication.viewmodel.CommentPodcastViewModel
 import com.example.myapplication.viewmodel.FavoriteViewModel
 import com.example.myapplication.viewmodel.ListPodcastViewModel
 import com.example.myapplication.viewmodel.MusicViewModel
 import com.example.myapplication.viewmodel.PlaylistViewModel
 import com.example.myapplication.viewmodel.PodcastViewModel
 import com.example.myapplication.viewmodel.ShareMusicViewModel
+import com.example.myapplication.viewmodel.UserViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -694,11 +701,17 @@ fun PodcastDialog(
     onToggleRepeatMode: () -> Unit,
     totalDurationPodcast: Long = 0L,
     onSeek: (Long) -> Unit,
+    commentPodcastViewModel: CommentPodcastViewModel = viewModel(),
+    userViewModel: UserViewModel = viewModel()
 ) {
     val context = LocalContext.current
     var currentPlayingPosition by remember { mutableLongStateOf(0L) }
     val listpodcasts by listPodcastViewModel.listPodcasts.collectAsState()
     val userId = loginViewModel?.currentUser?.value?.uid ?: "defaultUserId"
+    var comment by remember { mutableStateOf("") }
+
+    val commentPodcasts by commentPodcastViewModel.commentPodcast.collectAsState()
+    val users by userViewModel.users.collectAsState()
 
     LaunchedEffect(podcastService.currentPodcast) {
         podcastService.currentPodcast?.let { podcast ->
@@ -796,7 +809,7 @@ fun PodcastDialog(
                             ) {
                                 podcast?.podcastName?.let {
                                     Text(
-                                        text = if (it.length > 30) "${it.take(30)}..." else it,
+                                        text = it,
                                         color = Color.White,
                                         fontWeight = FontWeight.Medium,
                                         fontSize = 18.sp
@@ -811,34 +824,6 @@ fun PodcastDialog(
                                         fontSize = 12.sp
                                     )
                                 }
-                            }
-
-                            val listpodcastId = listpodcasts.find { it.podcastId == podcast?.podcastId && it.userId == userId }?.listPodcastId
-
-                            IconButton(
-                                onClick = {
-                                    val userId = loginViewModel?.currentUser?.value?.uid ?: "defaultUserId"
-                                    podcast?.podcastId?.let { podcastId ->
-                                        if (listPodcastViewModel.isListPodcast(userId, podcastId)) {
-                                            if (listpodcastId != null) {
-                                                listPodcastViewModel.removeListPodcast(listpodcastId)
-                                            }
-                                        } else {
-                                            listPodcastViewModel.addListPodcast(userId, podcastId)
-                                        }
-                                    }
-                                }
-                            ) {
-                                val isListPodcast = podcast?.podcastId?.let { podcastId ->
-                                    val userId = loginViewModel?.currentUser?.value?.uid ?: "defaultUserId"
-                                    listPodcastViewModel.isListPodcast(userId, podcastId)
-                                } ?: false
-
-                                Icon(
-                                    imageVector = if (isListPodcast) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                                    contentDescription = "",
-                                    tint = if (isListPodcast) Color.Red else Color.White,
-                                )
                             }
                         }
                     }
@@ -900,6 +885,35 @@ fun PodcastDialog(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            val listpodcastId = listpodcasts.find { it.podcastId == podcast?.podcastId && it.userId == userId }?.listPodcastId
+
+                            IconButton(
+                                onClick = {
+                                    val userId = loginViewModel?.currentUser?.value?.uid ?: "defaultUserId"
+                                    podcast?.podcastId?.let { podcastId ->
+                                        if (listPodcastViewModel.isListPodcast(userId, podcastId)) {
+                                            if (listpodcastId != null) {
+                                                listPodcastViewModel.removeListPodcast(listpodcastId)
+                                            }
+                                        } else {
+                                            listPodcastViewModel.addListPodcast(userId, podcastId)
+                                        }
+                                    }
+                                }
+                            ) {
+                                val isListPodcast = podcast?.podcastId?.let { podcastId ->
+                                    val userId = loginViewModel?.currentUser?.value?.uid ?: "defaultUserId"
+                                    listPodcastViewModel.isListPodcast(userId, podcastId)
+                                } ?: false
+
+                                Icon(
+                                    imageVector = if (isListPodcast) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                                    contentDescription = "",
+                                    tint = if (isListPodcast) Color.Red else Color.White,
+                                    modifier = Modifier.size(40.dp)
+                                )
+                            }
+
                             IconButton(onClick = { onPreviousSong() }) {
                                 Icon(
                                     Icons.Default.ArrowBack, contentDescription = "", tint = Color.White,
@@ -934,6 +948,126 @@ fun PodcastDialog(
                                 )
                             }
                         }
+                    }
+
+                    item {
+                        Spacer(modifier = Modifier.size(10.dp))
+
+                        Divider(color = Color(130,130,130), thickness = 1.dp)
+
+                        Column {
+                            Spacer(modifier = Modifier.size(10.dp))
+
+                            Text(
+                                text = "Comment",
+                                fontWeight = FontWeight.Medium,
+                                color = Color.White,
+                                fontSize = 16.sp
+                            )
+
+                            Divider(
+                                modifier = Modifier.width(50.dp),
+                                color = Color(130,130,130),
+                                thickness = 2.dp
+                            )
+
+                            Spacer(modifier = Modifier.size(10.dp))
+
+                            val keyboardController = LocalSoftwareKeyboardController.current
+
+                            Row {
+                                TextField(
+                                    modifier = Modifier
+                                        .height(50.dp),
+                                    value = comment,
+                                    onValueChange = { comment = it },
+                                    keyboardOptions = KeyboardOptions(
+                                        imeAction = ImeAction.Done,
+                                    ),
+                                    textStyle = TextStyle.Default.copy(fontSize = 16.sp, color = Color.White)
+                                )
+
+                                IconButton(
+                                    onClick = {
+                                        podcast?.podcastId?.let {
+                                            commentPodcastViewModel.addComment(
+                                                it, userId, comment)
+                                        }
+
+                                        keyboardController?.hide()
+                                        comment = ""
+                                    }
+                                ) {
+                                    Icon(
+                                        Icons.Default.Send, contentDescription = "Send", tint = Color.Cyan,
+                                    )
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.size(20.dp))
+                    }
+
+                    val commentsForPodcast = commentPodcasts.filter { it.podcastId == podcast?.podcastId }
+
+                    items(commentsForPodcast.asReversed()) { comment ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.hip_hop),
+                                    contentDescription = "Avatar",
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .clip(shape = CircleShape)
+                                        .border(2.dp, Color.White, CircleShape)
+                                )
+
+                                Spacer(modifier = Modifier.size(10.dp))
+
+                                Column(
+                                    horizontalAlignment = Alignment.Start
+                                ) {
+                                    val user = users.find { it.userId == comment.userId }
+
+                                    if (user != null) {
+                                        Text(
+                                            text = user.email + " \uD83D\uDD25",
+                                            color = Color.White,
+                                            fontSize = 16.sp,
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                    }
+
+                                    Text(
+                                        fontSize = 14.sp,
+                                        text = comment.content,
+                                        color = Color.Gray
+                                    )
+                                }
+                            }
+
+                            if(comment.userId == loginViewModel?.currentUser?.value?.uid) {
+                                Icon(
+                                    Icons.Default.Close, contentDescription = "X",
+                                    tint = Color.White,
+                                    modifier = Modifier.clickable {
+                                        podcast?.podcastId?.let {
+                                            commentPodcastViewModel.deleteComment(comment.commentId,
+                                                it
+                                            )
+                                        }
+                                    },
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.size(10.dp))
                     }
                 }
             }

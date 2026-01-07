@@ -33,5 +33,8 @@ sealed class Screen(
 
     object RankerMusicScreen : Screen("rankerMusic_screen", "#Chart", { color -> Icon(painterResource(id = R.drawable.baseline_multiline_chart_24), contentDescription = null, tint = color) }, selectedColor = Color(150,205,50), unselectedColor = Color.White)
     object ShareMusicScreen : Screen("shareMusic_screen", "#Share", { color -> Icon(painterResource(id = R.drawable.baseline_all_inclusive_24), contentDescription = null, tint = color) }, selectedColor = Color(150,205,50), unselectedColor = Color.White)
+
+    object RandomMusicScreen : Screen("randomMusic_screen", "#Music", { color -> Icon(painterResource(id = R.drawable.baseline_all_inclusive_24), contentDescription = null, tint = color) }, selectedColor = Color(150,205,50), unselectedColor = Color.White)
+    object NewMusicScreen : Screen("newMusic_screen", "#Music", { color -> Icon(painterResource(id = R.drawable.baseline_all_inclusive_24), contentDescription = null, tint = color) }, selectedColor = Color(150,205,50), unselectedColor = Color.White)
 }
 

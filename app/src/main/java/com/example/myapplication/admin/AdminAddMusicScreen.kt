@@ -17,10 +17,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -101,6 +104,7 @@ fun AdminAddMusicScreen(
             var artist by remember { mutableStateOf("") }
             var songName by remember { mutableStateOf("") }
             var audioUri by remember { mutableStateOf<Uri?>(null) }
+            var lyric by remember { mutableStateOf("") }
 
             Spacer(modifier = Modifier.size(20.dp))
 
@@ -155,6 +159,31 @@ fun AdminAddMusicScreen(
                         color = Color.White
                     )
                 }
+            )
+
+            Spacer(modifier = Modifier.size(10.dp))
+
+            OutlinedTextField(
+                value = lyric,
+                onValueChange = { lyric = it },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                ),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(50, 205, 50),
+                    unfocusedBorderColor = Color.White,
+                ),
+                textStyle = TextStyle.Default.copy(fontSize = 18.sp, color = Color.White),
+                label = {
+                    Text(
+                        "Enter the song lyric",
+                        fontSize = 18.sp,
+                        color = Color.White
+                    )
+                },
+                modifier = Modifier
+                    .heightIn(max = 150.dp)
+                    .verticalScroll(rememberScrollState())
             )
 
             Spacer(modifier = Modifier.size(10.dp))
@@ -240,7 +269,7 @@ fun AdminAddMusicScreen(
             Button(
                 onClick = {
                     if (bitmap.value != null && audioUri != null) {
-                        uploadDataToFirebase(bitmap.value!!, audioUri!!, context, genre, artist, songName)
+                        uploadDataToFirebase(bitmap.value!!, audioUri!!, context, genre, artist, songName, lyric, 0)
                     } else {
                         Toast.makeText(context, "Please select photo and audio file\n", Toast.LENGTH_SHORT).show()
                     }
@@ -252,7 +281,7 @@ fun AdminAddMusicScreen(
     }
 }
 
-fun uploadDataToFirebase(bitmap: Bitmap, audioUri: Uri, context: Context, genre: String, artist: String, songName: String) {
+fun uploadDataToFirebase(bitmap: Bitmap, audioUri: Uri, context: Context, genre: String, artist: String, songName: String, lyric: String, playCount: Int) {
     val storageRef = FirebaseStorage.getInstance().reference
     val databaseRef = FirebaseDatabase.getInstance().reference
 
@@ -289,7 +318,9 @@ fun uploadDataToFirebase(bitmap: Bitmap, audioUri: Uri, context: Context, genre:
                         "artist" to artist,
                         "songName" to songName,
                         "imageUrl" to imageUrl,
-                        "audioUrl" to audioUrl
+                        "audioUrl" to audioUrl,
+                        "lyric" to lyric,
+                        "playCount" to playCount
                     )
 
                     databaseRef.child("songs").push()

@@ -14,6 +14,24 @@ class MusicViewModel : ViewModel() {
     private val _musics: MutableStateFlow<List<Music>> = MutableStateFlow(emptyList())
     val musics: StateFlow<List<Music>> = _musics
 
+    fun getLatestMusics(count: Int = 10): List<Music> {
+        return _musics.value.takeLast(count)
+    }
+
+    private var randomMusics: List<Music>? = null
+
+    fun getRandomMusicsOnce(count: Int = 10): List<Music> {
+        if (randomMusics == null) {
+            val allMusics = _musics.value
+            randomMusics = if (allMusics.size <= count) {
+                allMusics.shuffled()
+            } else {
+                allMusics.shuffled().take(count)
+            }
+        }
+        return randomMusics ?: emptyList()
+    }
+
     init {
         val database = FirebaseDatabase.getInstance()
         val myRef = database.getReference("songs")
@@ -46,6 +64,7 @@ class MusicViewModel : ViewModel() {
                     }
                 }
                 _musics.value = musicList
+                randomMusics = null
             }
 
             override fun onCancelled(error: DatabaseError) {

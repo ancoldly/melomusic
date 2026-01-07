@@ -72,6 +72,7 @@ import com.example.myapplication.components.PodcastDialog
 import com.example.myapplication.components.ShowToastMessage
 import com.example.myapplication.data.Music
 import com.example.myapplication.data.Podcast
+import com.example.myapplication.viewmodel.CommentPodcastViewModel
 import com.example.myapplication.viewmodel.FavoriteViewModel
 import com.example.myapplication.viewmodel.ListPodcastViewModel
 import com.example.myapplication.viewmodel.MiniPlayerViewModel
@@ -102,8 +103,11 @@ fun HomeScreen(
     listPodcastViewModel: ListPodcastViewModel = viewModel(),
     onNavToHomePage: () -> Unit,
     onNavToRankerMusicPage: () -> Unit,
+    onNavToRandomMusicPage: () -> Unit,
+    onNavToNewMusicPage: () -> Unit,
     miniPlayerViewModel: MiniPlayerViewModel = viewModel(),
-    shareMusicViewModel: ShareMusicViewModel = viewModel()
+    shareMusicViewModel: ShareMusicViewModel = viewModel(),
+    commentPodcastViewModel: CommentPodcastViewModel = viewModel()
 ) {
     val loginUiState = loginViewModel?.loginUiState
     val isError = loginUiState?.logoutError != null
@@ -115,6 +119,7 @@ fun HomeScreen(
     val playlists by playlistViewModel.playlists.collectAsState()
     val listpodcasts by listPodcastViewModel.listPodcasts.collectAsState()
     val favorites by favoriteViewModel.favorites.collectAsState()
+    val commentPodcasts by commentPodcastViewModel.commentPodcast.collectAsState()
 
     val userPlaylists = playlists.filter { it.userId == loginViewModel?.currentUser?.value?.uid }
 
@@ -329,6 +334,59 @@ fun HomeScreen(
                     ) {
                         item {
                             Text(
+                                text = "Explore music",
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                        }
+
+                        item {
+                            Spacer(modifier = Modifier.size(10.dp))
+                        }
+
+                        item {
+                            LazyRow {
+                                item {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.newmusic),
+                                        contentDescription = "new_music",
+                                        modifier = Modifier
+                                            .clip(shape = RoundedCornerShape(10.dp))
+                                            .height(150.dp)
+                                            .clickable {
+                                                onNavToNewMusicPage.invoke()
+                                            },
+                                        contentScale = ContentScale.Crop
+                                    )
+                                }
+
+                                item {
+                                    Spacer(modifier = Modifier.size(10.dp))
+                                }
+
+                                item {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.randommusic),
+                                        contentDescription = "random_music",
+                                        modifier = Modifier
+                                            .clip(shape = RoundedCornerShape(10.dp))
+                                            .height(150.dp)
+                                            .clickable {
+                                                onNavToRandomMusicPage.invoke()
+                                            },
+                                        contentScale = ContentScale.Crop
+                                    )
+                                }
+                            }
+                        }
+
+                        item {
+                            Spacer(modifier = Modifier.size(20.dp))
+                        }
+
+                        item {
+                            Text(
                                 text = "Diverse music genres",
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
@@ -409,7 +467,7 @@ fun HomeScreen(
                                         modifier = Modifier
                                             .width(300.dp)
                                             .clickable {
-                                                if(podcastService.isPodcastPlaying) {
+                                                if (podcastService.isPodcastPlaying) {
                                                     podcastService.stopPodcast()
                                                     podcastService.setMiniPlayerVisibility(false)
                                                 }
@@ -564,7 +622,7 @@ fun HomeScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clickable {
-                                        if(podcastService.isPodcastPlaying) {
+                                        if (podcastService.isPodcastPlaying) {
                                             podcastService.stopPodcast()
                                             podcastService.setMiniPlayerVisibility(false)
                                         }
@@ -731,7 +789,7 @@ fun HomeScreen(
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .clickable {
-                                                if(musicService.isMusicPlaying) {
+                                                if (musicService.isMusicPlaying) {
                                                     musicService.stopMusic()
                                                     musicService.setMiniPlayerVisibility(false)
                                                 }
@@ -798,6 +856,12 @@ fun HomeScreen(
 
                                     Spacer(modifier = Modifier.size(10.dp))
                                 }
+                            }
+                        }
+
+                        item {
+                            if (musicService.isMiniPlayerVisible || podcastService.isMiniPodcastPlayerVisible) {
+                                Spacer(modifier = Modifier.size(64.dp))
                             }
                         }
                     }

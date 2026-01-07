@@ -439,7 +439,13 @@ fun RankerMusicScreen(
                             }
                         }
 
-                        Spacer(modifier = Modifier.size(70.dp))
+                        Spacer(modifier = Modifier.size(10.dp))
+                    }
+
+                    item {
+                        if (musicService.isMiniPlayerVisible || podcastService.isMiniPodcastPlayerVisible) {
+                            Spacer(modifier = Modifier.size(64.dp))
+                        }
                     }
                 }
             }

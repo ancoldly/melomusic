@@ -265,6 +265,9 @@ fun ProfileScreen(
                             loginViewModel?.logout(context)
                             musicService.stopMusic()
                             musicService.setMiniPlayerVisibility(false)
+
+                            podcastService.stopPodcast()
+                            podcastService.setMiniPlayerVisibility(false)
                         },
                         colors = ButtonDefaults.buttonColors(Color.Transparent)
                     ) {
@@ -647,6 +650,12 @@ fun ProfileScreen(
 
                                 Spacer(modifier = Modifier.size(10.dp))
                             }
+                        }
+                    }
+
+                    item {
+                        if (musicService.isMiniPlayerVisible || podcastService.isMiniPodcastPlayerVisible) {
+                            Spacer(modifier = Modifier.size(64.dp))
                         }
                     }
                 }

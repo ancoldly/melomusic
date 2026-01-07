@@ -113,20 +113,4 @@ class PodcastService : Service() {
             RepeatModePodcast.ONE -> RepeatModePodcast.OFF
         }
     }
-
-    fun getInternalCurrentPodcast(): Podcast? {
-        return currentPodcast
-    }
-
-    fun isPlaying(): Boolean {
-        return isPodcastPlaying
-    }
-
-    fun getCurrentPosition(): Long {
-        return mediaPlayer?.currentPosition?.toLong() ?: 0L
-    }
-
-    fun isPodcastLoaded(): Boolean {
-        return mediaPlayer != null
-    }
 }

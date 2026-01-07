@@ -32,8 +32,10 @@ import com.example.myapplication.screens.AddPlayListScreen
 import com.example.myapplication.screens.FavoriteScreen
 import com.example.myapplication.screens.ListPodcast
 import com.example.myapplication.screens.MusicScreen
+import com.example.myapplication.screens.NewMusicScreen
 import com.example.myapplication.screens.PlayListMusicScreen
 import com.example.myapplication.screens.PodcastScreen
+import com.example.myapplication.screens.RandomMusicScreen
 import com.example.myapplication.screens.RankerMusicScreen
 import com.example.myapplication.screens.SearchMusicScreen
 import com.example.myapplication.screens.ShareMusicScreen
@@ -133,6 +135,12 @@ fun Navigation(
                             saveState = true
                         }
                     }
+                },
+                onNavToNewMusicPage = {
+                     navController.navigate(Screen.NewMusicScreen.route)
+                },
+                onNavToRandomMusicPage = {
+                    navController.navigate(Screen.RandomMusicScreen.route)
                 },
                 podcastService = servicePodcast,
                 musicService = service
@@ -435,6 +443,28 @@ fun Navigation(
                 },
                 onNavSearchMusicPage = {
                     navController.navigate(Screen.SearchMusicScreen.route)
+                },
+                loginViewModel = loginViewModel,
+                musicService = service,
+                podcastService = servicePodcast
+            )
+        }
+
+        composable(route = Screen.NewMusicScreen.route) {
+            NewMusicScreen(
+                onNavToHomePage = {
+                    navController.navigateUp()
+                },
+                loginViewModel = loginViewModel,
+                musicService = service,
+                podcastService = servicePodcast
+            )
+        }
+
+        composable(route = Screen.RandomMusicScreen.route) {
+            RandomMusicScreen(
+                onNavToHomePage = {
+                    navController.navigateUp()
                 },
                 loginViewModel = loginViewModel,
                 musicService = service,

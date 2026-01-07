@@ -380,6 +380,12 @@ fun DetailSCategoryScreen(
 
                         Spacer(modifier = Modifier.size(10.dp))
                     }
+
+                    item {
+                        if (musicService.isMiniPlayerVisible || podcastService.isMiniPodcastPlayerVisible) {
+                            Spacer(modifier = Modifier.size(64.dp))
+                        }
+                    }
                 }
             }
 

@@ -122,20 +122,4 @@ class MusicService : Service() {
             RepeatMode.ONE -> RepeatMode.OFF
         }
     }
-
-    fun getInternalCurrentMusic(): Music? {
-        return currentMusic
-    }
-
-    fun isPlaying(): Boolean {
-        return isMusicPlaying
-    }
-
-    fun getCurrentPosition(): Long {
-        return mediaPlayer?.currentPosition?.toLong() ?: 0L
-    }
-
-    fun isMusicLoaded(): Boolean {
-        return mediaPlayer != null
-    }
 }
