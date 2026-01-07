@@ -59,22 +59,22 @@ This architecture keeps the codebase clear, testable, and maintainable.
 
 ## 📂 Suggested Project Structure
 
+```text
 app/
 ├── data/
-│ ├── model/ # Data models
-│ └── repository/ # Firebase repositories
-│
+│   ├── model/         # Data models
+│   └── repository/    # Firebase repositories
 ├── ui/
-│ ├── home/ # Home screen
-│ ├── search/ # Search screen
-│ ├── chart/ # Chart / trending screen
-│ ├── play/ # Music player screen
-│ ├── profile/ # User profile screen
-│ └── admin/ # Admin screens
-│
-├── viewmodel/ # ViewModels (MVVM)
-├── navigation/ # Navigation graph
+│   ├── home/
+│   ├── search/
+│   ├── chart/
+│   ├── play/
+│   ├── profile/
+│   └── admin/
+├── viewmodel/         # ViewModels
+├── navigation/        # Navigation graph
 └── MainActivity.kt
+```
 
 ## 🛠 Prerequisites (Before Running)
 - Android Studio (latest recommended)
