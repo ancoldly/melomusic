@@ -171,5 +171,3 @@ cd melomusic
 - Project: MELO Music App  
 - Developer: hongan.dev  
 - Email: hongan.dev@gmail.com
-
-Thank you for your interest! If you want, I can also help write a detailed Firebase setup guide, design a Firestore schema, or generate seed/sample data to get the app running quickly.
